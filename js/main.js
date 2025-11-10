@@ -63,7 +63,7 @@ about.addEventListener('click', (e) => {
       
       if (skipAnimation) {
         // Show content immediately without typewriter
-        terminal.innerHTML += '<span class="cursor">|</span>';
+        terminal.innerHTML += '<span class="dollar"></span><span class="cursor">|</span>';
         skipAnimation = false;
       } else {
         $(".terminal").typewriter()
@@ -84,7 +84,7 @@ contact.addEventListener('click', (e) => {
       
       if (skipAnimation) {
         // Show content immediately without typewriter
-        terminal.innerHTML += '<span class="cursor">|</span>';
+        terminal.innerHTML += '<span class="dollar"></span><span class="cursor">|</span>';
         skipAnimation = false;
       } else {
         $(".terminal").typewriter()
@@ -112,7 +112,7 @@ $.fn.typewriter = function() {
     c.html("");
     var e = function() {
       if (skipAnimation) {
-        c.html(b + '<span class="dollar cursor"> |</span>');
+        c.html(b + '<span class="dollar"></span><span class="cursor">|</span>');
         skipAnimation = false;
         return;
       }
@@ -133,7 +133,7 @@ $.fn.typewriter = function() {
         var timeoutId = setTimeout(e, 20)
         c.data('typewriterTimeout', timeoutId)
       } else {
-        c.html(b.substring(d, a) + '<span class="dollar cursor"> |</span>');
+        c.html(b.substring(d, a) + '<span class="dollar"></span><span class="cursor">|</span>');
       }
     };
     e()
