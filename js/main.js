@@ -1,5 +1,7 @@
+const home = document.querySelector('#home')
 const about = document.querySelector('#about')
 const contact = document.querySelector('#contact')
+const homeContent = document.querySelector('#home-content')
 const aboutContent = document.querySelector('#about-content')
 const contactContent = document.querySelector('#contact-content')
 
@@ -93,6 +95,27 @@ contact.addEventListener('click', (e) => {
   })
 }, true)
 
+home.addEventListener('click', (e) => {
+  e.preventDefault()
+  e.stopImmediatePropagation()
+  
+  typeCommand('home', () => {
+    const terminal = document.querySelector('.terminal')
+    if (terminal && homeContent) {
+      $(".terminal").stopTypewriter()
+      terminal.innerHTML = homeContent.innerHTML
+      
+      if (skipAnimation) {
+        // Show content immediately without typewriter
+        terminal.innerHTML += '<span class="dollar"></span><span class="cursor">|</span>';
+        skipAnimation = false;
+      } else {
+        $(".terminal").typewriter()
+      }
+    }
+  })
+}, true)
+
 // Typewriter.js
 // https://github.com/ronv/Typewriter.js
 
@@ -152,4 +175,7 @@ $.fn.stopTypewriter = function() {
   })
   return this
 }
+
+// Initialize terminal with home content on page load
+$(".terminal").html(homeContent.innerHTML);
 $(".terminal").typewriter();
