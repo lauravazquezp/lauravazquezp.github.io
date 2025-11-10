@@ -3,7 +3,14 @@ const contact = document.querySelector('#contact')
 const aboutContent = document.querySelector('#about-content')
 const contactContent = document.querySelector('#contact-content')
 
-// Function to simulate typing a command in the h1
+let skipAnimation = false;
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') {
+    skipAnimation = true;
+  }
+});
+
 function typeCommand(command, callback) {
   const h1 = document.querySelector('h1')
   
@@ -12,19 +19,31 @@ function typeCommand(command, callback) {
   
   const cursor = h1.querySelector('.cursor')
   
-  // Add a space before typing
+  if (skipAnimation) {
+    cursor.insertAdjacentText('beforebegin', ' ' + command)
+    skipAnimation = false;
+    callback()
+    return;
+  }
+  
   cursor.insertAdjacentText('beforebegin', ' ')
   
   let index = 0
   
   const typeInterval = setInterval(() => {
+    if (skipAnimation) {
+      clearInterval(typeInterval)
+      cursor.insertAdjacentText('beforebegin', command.substring(index))
+      skipAnimation = false;
+      callback()
+      return;
+    }
+    
     if (index < command.length) {
-      // Insert character before the cursor
       cursor.insertAdjacentText('beforebegin', command[index])
       index++
     } else {
       clearInterval(typeInterval)
-      // Wait a moment, then execute callback (keep the command text)
       setTimeout(() => {
         callback()
       }, 200)
@@ -41,7 +60,14 @@ about.addEventListener('click', (e) => {
     if (terminal && aboutContent) {
       $(".terminal").stopTypewriter()
       terminal.innerHTML = aboutContent.innerHTML
-      $(".terminal").typewriter()
+      
+      if (skipAnimation) {
+        // Show content immediately without typewriter
+        terminal.innerHTML += '<span class="cursor">|</span>';
+        skipAnimation = false;
+      } else {
+        $(".terminal").typewriter()
+      }
     }
   })
 }, true)
@@ -55,11 +81,17 @@ contact.addEventListener('click', (e) => {
     if (terminal && contactContent) {
       $(".terminal").stopTypewriter()
       terminal.innerHTML = contactContent.innerHTML
-      $(".terminal").typewriter()
+      
+      if (skipAnimation) {
+        // Show content immediately without typewriter
+        terminal.innerHTML += '<span class="cursor">|</span>';
+        skipAnimation = false;
+      } else {
+        $(".terminal").typewriter()
+      }
     }
   })
 }, true)
-
 
 // Typewriter.js
 // https://github.com/ronv/Typewriter.js
@@ -79,6 +111,12 @@ $.fn.typewriter = function() {
     }
     c.html("");
     var e = function() {
+      if (skipAnimation) {
+        c.html(b + '<span class="dollar cursor"> |</span>');
+        skipAnimation = false;
+        return;
+      }
+      
       if ("<" == b.substring(a, a + 1)) {
         var f = new RegExp(/<span class="instant"/),
           g = new RegExp(/<span class="clear"/);
@@ -94,6 +132,8 @@ $.fn.typewriter = function() {
       if (a < b.length) {
         var timeoutId = setTimeout(e, 20)
         c.data('typewriterTimeout', timeoutId)
+      } else {
+        c.html(b.substring(d, a) + '<span class="dollar cursor"> |</span>');
       }
     };
     e()
@@ -113,5 +153,3 @@ $.fn.stopTypewriter = function() {
   return this
 }
 $(".terminal").typewriter();
-
-
