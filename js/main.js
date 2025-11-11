@@ -5,11 +5,22 @@ const homeContent = document.querySelector('#home-content')
 const aboutContent = document.querySelector('#about-content')
 const contactContent = document.querySelector('#contact-content')
 
+// Extract the prompt from the HTML
 const h1Element = document.querySelector('h1');
-const PROMPT = h1Element.innerHTML; // Gets 'lauravazquezp:$<span class="cursor">|</span>'
+const PROMPT = h1Element.innerHTML;
 
 let skipAnimation = false;
-let currentCommand = ''; // Track the current command
+let currentCommand = '';
+
+// Make sure DOM is fully loaded before initializing
+document.addEventListener('DOMContentLoaded', function() {
+  // Initialize terminal with home content on page load
+  const terminal = document.querySelector('.terminal');
+  if (terminal && homeContent) {
+    terminal.innerHTML = homeContent.innerHTML;
+    $(".terminal").typewriter();
+  }
+});
 
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Enter') {
@@ -156,6 +167,9 @@ home.addEventListener('click', (e) => {
   e.preventDefault()
   e.stopImmediatePropagation()
   
+  console.log('Home clicked'); // Debug log
+  
+  // Just delete the command and reset to home view (no typing)
   deleteCommand(() => {
     const terminal = document.querySelector('.terminal')
     if (terminal && homeContent) {
@@ -163,7 +177,6 @@ home.addEventListener('click', (e) => {
       terminal.innerHTML = homeContent.innerHTML
       
       if (skipAnimation) {
-        // Show content immediately without typewriter
         terminal.innerHTML += '<span class="dollar"></span><span class="cursor">|</span>';
         skipAnimation = false;
       } else {
