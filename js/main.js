@@ -1,20 +1,19 @@
 const home = document.querySelector('#home')
 const about = document.querySelector('#about')
 const contact = document.querySelector('#contact')
+const portfolio = document.querySelector('#portfolio')
 const homeContent = document.querySelector('#home-content')
 const aboutContent = document.querySelector('#about-content')
+const portfolioContent = document.querySelector('#portfolio-content')
 const contactContent = document.querySelector('#contact-content')
 
-// Extract the prompt from the HTML
 const h1Element = document.querySelector('h1');
 const PROMPT = h1Element.innerHTML;
 
 let skipAnimation = false;
 let currentCommand = '';
 
-// Make sure DOM is fully loaded before initializing
 document.addEventListener('DOMContentLoaded', function() {
-  // Initialize terminal with home content on page load
   const terminal = document.querySelector('.terminal');
   if (terminal && homeContent) {
     terminal.innerHTML = homeContent.innerHTML;
@@ -23,14 +22,14 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 document.addEventListener('keydown', (e) => {
-  if (e.key === 'Enter') {
+  if (e.key === 'Enter' ||  e.key === ' ') {
     skipAnimation = true;
   }
 });
 
 // Function to delete the current command with backspace effect
 function deleteCommand(callback) {
-  const h1 = document.querySelector('h1')
+  const h1 = document.querySelector('h1');
   
   if (!currentCommand) {
     callback();
@@ -49,7 +48,6 @@ function deleteCommand(callback) {
   let commandLength = currentCommand.length;
   
   const deleteInterval = setInterval(() => {
-    // Check if Enter was pressed during deleting
     if (skipAnimation) {
       clearInterval(deleteInterval);
       h1.innerHTML = PROMPT;
@@ -65,27 +63,25 @@ function deleteCommand(callback) {
       h1.innerHTML = 'lauravazquezp:$ ' + remainingCommand + '<span class="cursor">|</span>';
     } else {
       clearInterval(deleteInterval);
-      // Remove the extra space too
       h1.innerHTML = PROMPT;
       currentCommand = '';
       callback();
     }
-  }, 30); // Same speed as typing
+  }, 30);
 }
 
 function typeCommand(command, callback) {
-  const h1 = document.querySelector('h1')
+  const h1 = document.querySelector('h1');
   
-  // Clear any previous command and reset to base prompt
-  h1.innerHTML = PROMPT
+  h1.innerHTML = PROMPT;
   
-  const cursor = h1.querySelector('.cursor')
+  const cursor = h1.querySelector('.cursor');
   
   if (skipAnimation) {
-    cursor.insertAdjacentText('beforebegin', ' ' + command)
+    cursor.insertAdjacentText('beforebegin', ' ' + command);
     currentCommand = command;
     skipAnimation = false;
-    callback()
+    callback();
     return;
   }
   
@@ -96,7 +92,7 @@ function typeCommand(command, callback) {
   const typeInterval = setInterval(() => {
     if (skipAnimation) {
       clearInterval(typeInterval)
-      cursor.insertAdjacentText('beforebegin', command.substring(index))
+      cursor.insertAdjacentText('beforebegin', command.substring(index));
       currentCommand = command;
       skipAnimation = false;
       callback()
@@ -104,10 +100,10 @@ function typeCommand(command, callback) {
     }
     
     if (index < command.length) {
-      cursor.insertAdjacentText('beforebegin', command[index])
-      index++
+      cursor.insertAdjacentText('beforebegin', command[index]);
+      index++;
     } else {
-      clearInterval(typeInterval)
+      clearInterval(typeInterval);
       currentCommand = command;
       setTimeout(() => {
         callback()
@@ -117,23 +113,44 @@ function typeCommand(command, callback) {
 }
 
 about.addEventListener('click', (e) => {
-  e.preventDefault()
-  e.stopImmediatePropagation()
+  e.preventDefault();
+  e.stopImmediatePropagation();
   
   // First delete any existing command, then type new one
   deleteCommand(() => {
-    typeCommand('about', () => {
+    typeCommand('whoami', () => {
       const terminal = document.querySelector('.terminal')
       if (terminal && aboutContent) {
-        $(".terminal").stopTypewriter()
-        terminal.innerHTML = aboutContent.innerHTML
+        $(".terminal").stopTypewriter();
+        terminal.innerHTML = aboutContent.innerHTML;
         
         if (skipAnimation) {
-          // Show content immediately without typewriter
-          terminal.innerHTML += '<span class="dollar"></span><span class="cursor">|</span>';
+          terminal.innerHTML += '<span class="dollar"> </span><span class="cursor">|</span>';
           skipAnimation = false;
         } else {
-          $(".terminal").typewriter()
+          $(".terminal").typewriter();
+        }
+      }
+    })
+  })
+}, true)
+
+portfolio.addEventListener('click', (e) => {
+  e.preventDefault();
+  e.stopImmediatePropagation();
+  
+  deleteCommand(() => {
+    typeCommand('portfolio', () => {
+      const terminal = document.querySelector('.terminal');
+      if (terminal && portfolioContent) {
+        $(".terminal").stopTypewriter();
+        terminal.innerHTML = portfolioContent.innerHTML;
+        
+        if (skipAnimation) {
+          terminal.innerHTML += '<span class="dollar"> </span><span class="cursor">|</span>';
+          skipAnimation = false;
+        } else {
+          $(".terminal").typewriter();
         }
       }
     })
@@ -141,22 +158,21 @@ about.addEventListener('click', (e) => {
 }, true)
 
 contact.addEventListener('click', (e) => {
-  e.preventDefault()
-  e.stopImmediatePropagation()
+  e.preventDefault();
+  e.stopImmediatePropagation();
   
   deleteCommand(() => {
     typeCommand('contact', () => {
       const terminal = document.querySelector('.terminal')
       if (terminal && contactContent) {
-        $(".terminal").stopTypewriter()
-        terminal.innerHTML = contactContent.innerHTML
+        $(".terminal").stopTypewriter();
+        terminal.innerHTML = contactContent.innerHTML;
         
         if (skipAnimation) {
-          // Show content immediately without typewriter
-          terminal.innerHTML += '<span class="dollar"></span><span class="cursor">|</span>';
+          terminal.innerHTML += '<span class="dollar"> </span><span class="cursor">|</span>';
           skipAnimation = false;
         } else {
-          $(".terminal").typewriter()
+          $(".terminal").typewriter();
         }
       }
     })
@@ -164,25 +180,26 @@ contact.addEventListener('click', (e) => {
 }, true)
 
 home.addEventListener('click', (e) => {
-  e.preventDefault()
-  e.stopImmediatePropagation()
+  e.preventDefault();
+  e.stopImmediatePropagation();
   
-  console.log('Home clicked'); // Debug log
-  
-  // Just delete the command and reset to home view (no typing)
   deleteCommand(() => {
-    const terminal = document.querySelector('.terminal')
-    if (terminal && homeContent) {
-      $(".terminal").stopTypewriter()
-      terminal.innerHTML = homeContent.innerHTML
-      
-      if (skipAnimation) {
-        terminal.innerHTML += '<span class="dollar"></span><span class="cursor">|</span>';
-        skipAnimation = false;
-      } else {
-        $(".terminal").typewriter()
+    typeCommand('..', () => {
+      deleteCommand(() => {
+      const terminal = document.querySelector('.terminal')
+      if (terminal && homeContent) {
+        $(".terminal").stopTypewriter()
+        terminal.innerHTML = homeContent.innerHTML
+        
+        if (skipAnimation) {
+          terminal.innerHTML += '<span class="dollar"> </span><span class="cursor">|</span>';
+          skipAnimation = false;
+        } else {
+          $(".terminal").typewriter()
+        }
       }
-    }
+    })
+    })
   })
 }, true)
 
@@ -205,7 +222,7 @@ $.fn.typewriter = function() {
     c.html("");
     var e = function() {
       if (skipAnimation) {
-        c.html(b + '<span class="dollar"></span><span class="cursor">|</span>');
+        c.html(b + '<span class="dollar"> </span><span class="cursor">|</span>');
         skipAnimation = false;
         return;
       }
@@ -219,14 +236,14 @@ $.fn.typewriter = function() {
           for (;
             ">" != b.substring(a, a + 1);) a++
       }
-      c.html(b.substring(d, a++) + (Math.floor(blinkCounter / 10) & 1 ? "|" : ""));
+      c.html(b.substring(d, a++) + (Math.floor(blinkCounter / 10) & 1 ? "<span class=\"typewritter\">|</span>" : ""));
       blinkCounter++;
       
       if (a < b.length) {
         var timeoutId = setTimeout(e, 20)
         c.data('typewriterTimeout', timeoutId)
       } else {
-        c.html(b.substring(d, a) + '<span class="dollar"></span><span class="cursor">|</span>');
+        c.html(b.substring(d, a) + '<span class="dollar"> </span><span class="cursor">|</span>');
       }
     };
     e()
